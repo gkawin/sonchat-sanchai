@@ -1,27 +1,37 @@
-import React, { createContext } from 'react'
+import React from 'react'
 import ReactDOM from 'react-dom'
 
-const ModalContext = createContext({
-  component: null,
-  props: {},
-  showModal: () => { },
-  hideModal: () => { }
-})
+class ModalDestination extends React.PureComponent {
+  constructor (props) {
+    super(props)
+    this.node = document.createElement('div')
+    document.body.appendChild(this.node)
+  }
 
-class ModalProvider extends React.PureComponent {
+  componentWillUnmount () {
+    if (this.node) {
+      document.body.removeChild(this.node)
+    }
+    this.node = null
+  }
   render () {
-    return (
-      <ModalContext.Provider value={{ foo: 'bar' }}>
-        {this.props.children}
-      </ModalContext.Provider>
+    return ReactDOM.createPortal(
+      this.props.children,
+      this.node
     )
   }
 }
 
 const App = () => (
   <div>
-    this is anchor the destination
-    <ModalProvider />
+    <ModalDestination />
+    <h1>
+        THis is level 1
+      <div>
+        <h2>this is level 2</h2>
+
+      </div>
+    </h1>
   </div>
 )
 
